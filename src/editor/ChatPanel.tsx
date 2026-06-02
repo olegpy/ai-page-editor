@@ -1,6 +1,6 @@
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport } from 'ai'
-import { useState, type SubmitEvent } from 'react'
+import { useState, type KeyboardEvent, type SubmitEvent } from 'react'
 import { getChatErrorMessage, getMessageDisplayText, getMessageText } from '../lib'
 import { parsePageContent } from '../landing'
 import type { PageEditor } from '../hooks'
@@ -39,13 +39,24 @@ export function ChatPanel({ editor }: ChatPanelProps) {
 
   const chatError = getChatErrorMessage(error, status)
 
-  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
-    event.preventDefault()
+  function sendInput() {
     const text = input.trim()
     if (!text || isBusy) return
     onProposal(null, null)
     sendMessage({ text }, { body: { pageContent } })
     setInput('')
+  }
+
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
+    event.preventDefault()
+    sendInput()
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key !== 'Enter' || event.shiftKey) return
+
+    event.preventDefault()
+    sendInput()
   }
 
   return (
@@ -137,6 +148,7 @@ export function ChatPanel({ editor }: ChatPanelProps) {
           name="message"
           value={input}
           onChange={event => setInput(event.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="What should change on the page?"
           rows={3}
           disabled={isBusy}
@@ -144,7 +156,9 @@ export function ChatPanel({ editor }: ChatPanelProps) {
           className="w-full resize-y rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-base leading-relaxed text-white placeholder:text-slate-500 focus:border-violet-500/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/50 disabled:cursor-not-allowed disabled:opacity-50"
         />
         <p id="chat-input-hint" className="mt-1 text-sm text-slate-400">
-          {isBusy ? 'Wait for the assistant to finish before sending another message.' : 'Send when ready.'}
+          {isBusy
+            ? 'Wait for the assistant to finish before sending another message.'
+            : 'Press Enter to send. Shift+Enter for a new line.'}
         </p>
         <div className="mt-3 flex gap-2">
           <button
