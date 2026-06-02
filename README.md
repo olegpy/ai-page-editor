@@ -1,6 +1,6 @@
 # AI Page Editor
 
-Edit a landing page through conversation with an AI agent. Chat text streams on the left (JSON blocks are hidden in the thread); the preview switches to the proposed page when the reply finishes, then **Apply** commits it for the next turn.
+Edit a landing page through chat. The assistant streams on the left; the preview updates when the reply finishes. **Apply** saves changes for the next message.
 
 **Live demo:** _add your Vercel URL after deploy_  
 **Repository:** https://github.com/olegpy/ai-page-editor
@@ -23,85 +23,30 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173).
 
-## Editing flow
+## How it works
 
-1. Describe a change in the chat (e.g. “Make the headline shorter”).
-2. The assistant streams a reply and returns updated page JSON in a fenced `json` block.
-3. The preview shows the **proposal** (amber banner) without committing it.
-4. **Apply changes** updates the page sent on the next request; **Discard** reverts the preview.
+1. Type what to change in the chat.
+2. The assistant replies (JSON for the page is parsed on the client, not shown in the thread).
+3. The preview shows the proposal (amber banner).
+4. **Apply** saves it; **Discard** drops it.
 
-The API key stays on the server (`/api/chat`), never in the browser.
+`OPENAI_API_KEY` is only used on the server (`/api/chat`), never in the browser.
 
-## Project structure
-
-```
-api/                 Vercel serverless entry points (thin HTTP layer)
-server/              Shared server logic (chat, prompts, validation)
-  chat.ts            streamText + OpenAI
-  chatPrompt.ts
-  chatRequest.ts     Zod request schema
-  messages.ts        User-facing API error copy
-
-src/
-  editor/            Chat UI, preview, apply/discard components
-  hooks/             React hooks (e.g. usePageEditor)
-  landing/           Page UI + content model (index.ts for client; server uses types/schema paths)
-  lib/               Reusable helpers (extract/parse assistant JSON, message display)
-
-vite/                Dev-only: mirrors /api/* locally (not deployed)
-```
-
-## Architecture
+## Project layout
 
 ```
-Browser (React)
-  → POST /api/chat { messages, pageContent }
-
-Local dev:  vite/apiDevMiddleware → server/chat.ts
-Production: api/chat.ts           → server/chat.ts → OpenAI
+api/          Vercel route: POST /api/chat
+server/       OpenAI streaming, prompts, request validation
+src/editor/   Chat panel, preview, apply / discard
+src/landing/  Landing page UI and content schema
+src/hooks/    Page state (committed vs proposal)
+src/lib/      Parse assistant JSON for the preview
+vite/         Local dev only — proxies /api/chat (not deployed)
 ```
 
-- `vite.config.ts` middleware does **not** run in production.
-- Env: local `.env` loaded by `vite/apiDevPlugin.ts`; on Vercel set `OPENAI_API_KEY` in the dashboard.
+Locally, `npm run dev` uses `vite/` to call the same `server/` code as production.
 
-## CI
-
-GitHub Actions runs on every push and pull request to `main`:
-
-- `npm ci`
-- `npm run lint`
-- `npm run build`
-
-Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
-
-## Deploy (Vercel)
-
-1. Push `main` to GitHub (CI should pass).
-2. [Import the repo](https://vercel.com/new) in Vercel (Git integration).
-3. Vercel reads [`vercel.json`](vercel.json):
-   - **Build:** `npm run build` → output `dist`
-   - **API:** `api/chat.ts` → serverless `POST /api/chat`
-   - **SPA:** all non-`/api` routes → `index.html`
-4. **Environment variables** (Production + Preview):
-
-   | Name | Value |
-   |------|--------|
-   | `OPENAI_API_KEY` | Your OpenAI API key (server only; never `VITE_*`) |
-
-5. Deploy, then paste the production URL into **Live demo** above.
-
-`vite/` dev middleware is not used on Vercel — only `api/chat.ts` + the static build.
-
-## Scripts
-
-| Command           | Description                              |
-| ----------------- | ---------------------------------------- |
-| `npm run dev`     | Vite + local `/api/chat` middleware      |
-| `npm run build`   | Typecheck + production build             |
-| `npm run preview` | Preview production build                 |
-| `npm run lint`    | ESLint                                   |
-
-## Demo ideas for reviewers
+## Try it
 
 - “Make the hero headline shorter and more playful”
 - “Change the primary CTA to Get started free”
