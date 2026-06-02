@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { landingPageContentSchema } from '../src/landing/contentSchema'
+import { landingPageContentSchema } from '../src/landing/contentSchema.js'
 
 const textPartSchema = z.object({
   type: z.literal('text'),

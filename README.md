@@ -3,7 +3,7 @@
 Edit a landing page through conversation with an AI agent. Chat text streams on the left (JSON blocks are hidden in the thread); the preview switches to the proposed page when the reply finishes, then **Apply** commits it for the next turn.
 
 **Live demo:** _add your Vercel URL after deploy_  
-**Repository:** _add your GitHub URL_
+**Repository:** https://github.com/olegpy/ai-page-editor
 
 ## Stack
 
@@ -64,11 +64,33 @@ Production: api/chat.ts           → server/chat.ts → OpenAI
 - `vite.config.ts` middleware does **not** run in production.
 - Env: local `.env` loaded by `vite/apiDevPlugin.ts`; on Vercel set `OPENAI_API_KEY` in the dashboard.
 
+## CI
+
+GitHub Actions runs on every push and pull request to `main`:
+
+- `npm ci`
+- `npm run lint`
+- `npm run build`
+
+Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
+
 ## Deploy (Vercel)
 
-1. Push to GitHub and import the project in [Vercel](https://vercel.com).
-2. Add environment variable: `OPENAI_API_KEY`.
-3. Deploy. Routes under `api/` run as serverless functions; the SPA is served from `dist/`.
+1. Push `main` to GitHub (CI should pass).
+2. [Import the repo](https://vercel.com/new) in Vercel (Git integration).
+3. Vercel reads [`vercel.json`](vercel.json):
+   - **Build:** `npm run build` → output `dist`
+   - **API:** `api/chat.ts` → serverless `POST /api/chat`
+   - **SPA:** all non-`/api` routes → `index.html`
+4. **Environment variables** (Production + Preview):
+
+   | Name | Value |
+   |------|--------|
+   | `OPENAI_API_KEY` | Your OpenAI API key (server only; never `VITE_*`) |
+
+5. Deploy, then paste the production URL into **Live demo** above.
+
+`vite/` dev middleware is not used on Vercel — only `api/chat.ts` + the static build.
 
 ## Scripts
 

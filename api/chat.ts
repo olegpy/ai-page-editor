@@ -1,4 +1,4 @@
-import { CHAT_REQUEST_FAILED, createChatResponse, HttpStatus } from '../server'
+import { CHAT_REQUEST_FAILED, createChatResponse, HttpStatus } from '../server/index.js'
 
 export async function POST(request: Request) {
   try {
