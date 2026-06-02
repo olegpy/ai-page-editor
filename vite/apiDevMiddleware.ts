@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
-import { CHAT_REQUEST_FAILED, createChatResponse } from '../server'
+import { CHAT_REQUEST_FAILED, createChatResponse, HttpStatus } from '../server'
 
 type ConnectNext = (error?: unknown) => void
 
@@ -59,7 +59,7 @@ export async function apiDevMiddleware(
   }
 
   if (req.method !== 'POST') {
-    res.statusCode = 405
+    res.statusCode = HttpStatus.MethodNotAllowed
     res.end('Method Not Allowed')
     return
   }
@@ -68,6 +68,6 @@ export async function apiDevMiddleware(
     await handleChatPost(req, res)
   } catch (error) {
     const message = error instanceof Error ? error.message : CHAT_REQUEST_FAILED
-    sendJson(res, 500, { error: message })
+    sendJson(res, HttpStatus.InternalServerError, { error: message })
   }
 }

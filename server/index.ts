@@ -6,3 +6,4 @@ export {
   INVALID_CHAT_REQUEST,
   OPENAI_API_KEY_MISSING,
 } from './messages'
+export { HttpStatus, type HttpStatusCode } from './httpStatus'
