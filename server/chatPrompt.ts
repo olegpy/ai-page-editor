@@ -1,4 +1,4 @@
-import type { LandingPageContent } from '../src/landing/types'
+import type { LandingPageContent } from '../src/landing/types.js'
 
 /** System prompt for POST /api/chat: current page JSON, rules, and expected reply format. */
 export function getChatPrompt(pageContent: LandingPageContent): string {

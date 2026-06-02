@@ -1,13 +1,13 @@
 import { createOpenAI } from '@ai-sdk/openai'
 import { convertToModelMessages, streamText, type UIMessage } from 'ai'
-import { getChatPrompt } from './chatPrompt'
-import { chatRequestSchema, type ChatRequest } from './chatRequest'
-import { HttpStatus } from './httpStatus'
+import { getChatPrompt } from './chatPrompt.js'
+import { chatRequestSchema, type ChatRequest } from './chatRequest.js'
+import { HttpStatus } from './httpStatus.js'
 import {
   CHAT_REQUEST_FAILED,
   INVALID_CHAT_REQUEST,
   OPENAI_API_KEY_MISSING,
-} from './messages'
+} from './messages.js'
 
 export type { ChatRequest }
 
