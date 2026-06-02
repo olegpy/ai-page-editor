@@ -2,8 +2,11 @@
 
 Edit a landing page through chat. The assistant streams on the left; the preview updates when the reply finishes. **Apply** saves changes for the next message.
 
-**Live demo:** _add your Vercel URL after deploy_  
-**Repository:** https://github.com/olegpy/ai-page-editor
+**[Live demo](https://ai-page-editor-murex.vercel.app)** — try prompts like:
+
+- “Make the hero headline shorter and more playful”
+- “Change the primary CTA to Get started free”
+- “Rewrite the testimonials section for a developer audience”
 
 ## Stack
 
@@ -45,9 +48,3 @@ vite/         Local dev only — proxies /api/chat (not deployed)
 ```
 
 Locally, `npm run dev` uses `vite/` to call the same `server/` code as production.
-
-## Try it
-
-- “Make the hero headline shorter and more playful”
-- “Change the primary CTA to Get started free”
-- “Rewrite the testimonials section for a developer audience”
