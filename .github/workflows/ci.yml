@@ -2,9 +2,7 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
-      - 'APE-*'
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -62,7 +60,5 @@ jobs:
           else
             PROD_FLAG=""
           fi
-
-          # Let Vercel build remotely (same as Git integration). Local `vercel build`
-          # typechecks server/ with Node16 rules and fails on extensionless imports.
+          
           vercel deploy $PROD_FLAG --token="$VERCEL_TOKEN"
