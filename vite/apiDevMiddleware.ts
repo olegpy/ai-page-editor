@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
-import { CHAT_REQUEST_FAILED, createChatResponse, HttpStatus } from '../server'
+import { CHAT_REQUEST_FAILED, createChatResponse, HttpStatus, INVALID_REQUEST_JSON } from '../server'
 
 type ConnectNext = (error?: unknown) => void
 
@@ -43,7 +43,14 @@ async function sendWebResponse(webResponse: Response, res: ServerResponse): Prom
 }
 
 async function handleChatPost(req: IncomingMessage, res: ServerResponse): Promise<void> {
-  const body = await readJsonBody(req)
+  let body: unknown
+  try {
+    body = await readJsonBody(req)
+  } catch {
+    sendJson(res, HttpStatus.BadRequest, { error: INVALID_REQUEST_JSON })
+    return
+  }
+
   const webResponse = await createChatResponse(body)
   await sendWebResponse(webResponse, res)
 }
