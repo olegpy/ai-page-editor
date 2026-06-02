@@ -10,7 +10,29 @@
   }
 
   body {
-    @apply min-h-screen bg-slate-950 font-sans text-slate-100 antialiased;
+    @apply min-h-screen overflow-hidden bg-slate-950 font-sans text-slate-100 antialiased;
+  }
+
+  #root {
+    @apply h-screen min-h-0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    .btn-primary:hover {
+      transform: none;
+    }
   }
 }
 
@@ -28,19 +50,95 @@
   }
 
   .btn-header {
-    @apply rounded-full bg-white px-4 py-2 text-sm font-medium text-slate-950 transition hover:bg-slate-200;
+    @apply cursor-pointer rounded-full bg-white px-4 py-2 text-sm font-medium text-slate-950 transition-colors duration-150;
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white;
+  }
+
+  .btn-header:hover {
+    @apply bg-slate-100;
+  }
+
+  .btn-header:active {
+    @apply bg-slate-200;
   }
 
   .btn-primary {
-    @apply w-full rounded-full bg-gradient-to-r from-violet-600 to-cyan-500 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/25 transition hover:opacity-90 sm:w-auto;
+    @apply w-full cursor-pointer rounded-full bg-gradient-to-r from-violet-600 to-cyan-500 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/25 transition-all duration-150 sm:w-auto;
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400;
+  }
+
+  .btn-primary:hover {
+    @apply scale-[1.02] shadow-xl shadow-violet-500/40 brightness-110;
+  }
+
+  .btn-primary:active {
+    @apply scale-[0.98] brightness-95;
   }
 
   .btn-secondary {
-    @apply w-full rounded-full border border-white/10 bg-white/5 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/10 sm:w-auto;
+    @apply w-full cursor-pointer rounded-full border border-white/10 bg-white/5 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur transition-colors duration-150 sm:w-auto;
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400;
+  }
+
+  .btn-secondary:hover {
+    @apply border-white/25 bg-white/15 text-white;
+  }
+
+  .btn-secondary:active {
+    @apply bg-white/20;
   }
 
   .btn-cta {
-    @apply rounded-full bg-white px-10 py-4 text-sm font-semibold text-slate-950 transition hover:bg-slate-200;
+    @apply cursor-pointer rounded-full bg-white px-10 py-4 text-sm font-semibold text-slate-950 transition-colors duration-150;
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white;
+  }
+
+  .btn-cta:hover {
+    @apply bg-slate-100;
+  }
+
+  .btn-cta:active {
+    @apply bg-slate-200;
+  }
+
+  .btn-editor-primary {
+    @apply cursor-pointer rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-150;
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-editor-primary:hover:not(:disabled) {
+    @apply bg-violet-500 ring-2 ring-violet-400/40;
+  }
+
+  .btn-editor-primary:active:not(:disabled) {
+    @apply bg-violet-700;
+  }
+
+  .btn-editor-success {
+    @apply cursor-pointer rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-150;
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400;
+  }
+
+  .btn-editor-success:hover {
+    @apply bg-emerald-500 ring-2 ring-emerald-400/40;
+  }
+
+  .btn-editor-success:active {
+    @apply bg-emerald-700;
+  }
+
+  .btn-editor-ghost {
+    @apply cursor-pointer rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-300 transition-colors duration-150;
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400;
+  }
+
+  .btn-editor-ghost:hover {
+    @apply border-white/25 bg-white/15 text-white;
+  }
+
+  .btn-editor-ghost:active {
+    @apply bg-white/20;
   }
 
   .card-surface {
