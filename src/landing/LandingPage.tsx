@@ -108,15 +108,18 @@ export function LandingPage({ content }: LandingPageProps) {
             {hero.subtitle}
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <button type="button" className="btn-primary">
+            <button type="button" className="btn-primary" onClick={() => scrollToSection('cta')}>
               {hero.primaryCta}
             </button>
-            <button type="button" className="btn-secondary">
+            <button type="button" className="btn-secondary" onClick={() => scrollToSection('demo')}>
               {hero.secondaryCta}
             </button>
           </div>
 
-          <div className="mx-auto mt-16 max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-slate-900/50 p-2 shadow-2xl shadow-black/40 backdrop-blur">
+          <div
+            id="demo"
+            className="mx-auto mt-16 max-w-4xl scroll-mt-16 overflow-hidden rounded-2xl border border-white/10 bg-slate-900/50 p-2 shadow-2xl shadow-black/40 backdrop-blur"
+          >
             <div className="flex items-center gap-2 border-b border-white/5 px-4 py-3">
               <span className="h-3 w-3 rounded-full bg-red-500/80" />
               <span className="h-3 w-3 rounded-full bg-amber-500/80" />
