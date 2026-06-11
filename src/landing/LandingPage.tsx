@@ -1,7 +1,35 @@
+import type { MouseEvent } from 'react'
 import type { LandingPageContent } from './types'
 
 type LandingPageProps = {
   content: LandingPageContent
+}
+
+const PREVIEW_HEADER_OFFSET = 64
+
+function scrollToSection(id: string) {
+  const target = document.getElementById(id)
+  const scroller = document.getElementById('page-preview-scroll')
+  if (!target) return
+
+  if (!scroller) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    return
+  }
+
+  const top =
+    target.getBoundingClientRect().top -
+    scroller.getBoundingClientRect().top +
+    scroller.scrollTop -
+    PREVIEW_HEADER_OFFSET
+
+  scroller.scrollTo({ top, behavior: 'smooth' })
+}
+
+function handleNavClick(event: MouseEvent<HTMLAnchorElement>, href: string) {
+  if (!href.startsWith('#')) return
+  event.preventDefault()
+  scrollToSection(href.slice(1))
 }
 
 const featureIcons = [
@@ -26,37 +54,49 @@ export function LandingPage({ content }: LandingPageProps) {
   const { brand, navLinks, hero, features, testimonials, callToAction, footer } = content
 
   return (
-    <div className="min-h-full">
-      <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden>
+    <div className="relative min-h-full">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
         <div className="absolute -top-40 left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-violet-600/20 blur-3xl" />
         <div className="absolute top-1/3 right-0 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
       </div>
 
-      <header className="relative z-10 border-b border-white/5">
-        <nav className="container-page flex items-center justify-between py-5">
-          <a href="#" className="flex items-center gap-2 text-lg font-semibold tracking-tight">
+      <header className="sticky top-0 z-20 border-b border-white/5 bg-slate-950/95 backdrop-blur-md">
+        <nav className="container-page flex items-center justify-between gap-4 py-4">
+          <a
+            href="#hero"
+            onClick={event => handleNavClick(event, '#hero')}
+            className="flex shrink-0 items-center gap-2 text-lg font-semibold tracking-tight"
+          >
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-cyan-400 text-sm font-bold text-white">
               N
             </span>
             {brand}
           </a>
-          <ul className="hidden items-center gap-8 text-sm text-slate-400 md:flex">
+          <ul className="hidden items-center gap-8 text-sm text-slate-400 @3xl:flex">
             {navLinks.map((navLink) => (
               <li key={navLink.href}>
-                <a href={navLink.href} className="transition hover:text-white">
+                <a
+                  href={navLink.href}
+                  onClick={event => handleNavClick(event, navLink.href)}
+                  className="transition hover:text-white"
+                >
                   {navLink.label}
                 </a>
               </li>
             ))}
           </ul>
-          <button type="button" className="btn-header">
-            Sign in
+          <button
+            type="button"
+            className="btn-header max-w-40 shrink-0 truncate sm:max-w-none"
+            onClick={() => scrollToSection('cta')}
+          >
+            {hero.primaryCta}
           </button>
         </nav>
       </header>
 
-      <main className="relative z-10">
-        <section className="container-page pb-24 pt-20 text-center md:pt-28">
+      <main className="relative z-0">
+        <section id="hero" className="scroll-mt-16 container-page pb-24 pt-20 text-center md:pt-28">
           <span className="inline-flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-4 py-1.5 text-xs font-medium text-violet-300">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
             {hero.badge}
@@ -97,7 +137,7 @@ export function LandingPage({ content }: LandingPageProps) {
           </div>
         </section>
 
-        <section id="features" className="border-t border-white/5 bg-slate-900/30 py-24">
+        <section id="features" className="scroll-mt-16 border-t border-white/5 bg-slate-900/30 py-24">
           <div className="container-page">
             <div className="max-w-2xl">
               <h2 className="heading-section">
@@ -122,7 +162,7 @@ export function LandingPage({ content }: LandingPageProps) {
           </div>
         </section>
 
-        <section id="testimonials" className="py-24">
+        <section id="testimonials" className="scroll-mt-16 py-24">
           <div className="container-page">
             <h2 className="heading-section text-center">
               {testimonials.heading}
@@ -146,7 +186,7 @@ export function LandingPage({ content }: LandingPageProps) {
           </div>
         </section>
 
-        <section id="cta" className="border-t border-white/5 py-24">
+        <section id="cta" className="scroll-mt-16 border-t border-white/5 py-24">
           <div className="container-page-narrow text-center">
             <h2 className="heading-section">
               {callToAction.title}
@@ -159,7 +199,7 @@ export function LandingPage({ content }: LandingPageProps) {
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-white/5 py-12">
+      <footer className="relative z-0 border-t border-white/5 py-12">
         <div className="container-page flex flex-col items-center justify-between gap-4 text-center text-sm text-slate-500 md:flex-row md:text-left">
           <p>{footer.tagline}</p>
           <p>{footer.copyright}</p>

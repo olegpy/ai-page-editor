@@ -12,6 +12,7 @@ Rules:
 - Preserve the exact JSON shape and keys: brand, navLinks, hero, features, testimonials, callToAction, footer.
 - Return valid JSON that matches the schema (same structure as the current content).
 - Keep nav link hrefs as hash anchors (#features, #testimonials, #cta) unless the user asks to change them.
+- Nav labels should match those sections (e.g. Features, Testimonials, Get started) — not duplicate names for different targets.
 
 Response format:
 1. Write 1–3 short sentences explaining what you changed.

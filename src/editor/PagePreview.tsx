@@ -27,11 +27,12 @@ export function PagePreview({ content, isProposal }: PagePreviewProps) {
       )}
 
       <div
+        id="page-preview-scroll"
         tabIndex={-1}
         className={
           isProposal
-            ? 'flex-1 overflow-y-auto pt-12 ring-2 ring-inset ring-amber-500/40 focus:outline-none'
-            : 'flex-1 overflow-y-auto focus:outline-none'
+            ? '@container flex-1 overflow-y-auto pt-12 ring-2 ring-inset ring-amber-500/40 focus:outline-none'
+            : '@container flex-1 overflow-y-auto focus:outline-none'
         }
       >
         <LandingPage content={content} />

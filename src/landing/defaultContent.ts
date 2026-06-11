@@ -4,8 +4,8 @@ export const defaultLandingContent: LandingPageContent = {
   brand: 'Nimbus',
   navLinks: [
     { label: 'Features', href: '#features' },
-    { label: 'Stories', href: '#testimonials' },
-    { label: 'Pricing', href: '#cta' },
+    { label: 'Testimonials', href: '#testimonials' },
+    { label: 'Get started', href: '#cta' },
   ],
   hero: {
     badge: 'Now in public beta',
