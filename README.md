@@ -1,19 +1,30 @@
 # AI Page Editor
 
-Edit a landing page through chat. The assistant streams on the left; the preview updates when the reply finishes. **Apply** saves changes for the next message.
+Chat-driven landing page editor: describe changes in plain English, preview the result, then apply or discard before the next turn.
 
-**[Live demo](https://ai-page-editor-murex.vercel.app)** — try prompts like:
+**[Live demo](https://ai-page-editor-murex.vercel.app)**
 
-- “Make the hero headline shorter and more playful”
-- “Change the primary CTA to Get started free”
-- “Rewrite the testimonials section for a developer audience”
+Try: *“Make the hero headline shorter and more playful”* · *“Change the primary CTA to Get started free”* · *“Rewrite testimonials for a developer audience”*
+
+## How it works
+
+1. Type what to change in the chat (assistant reply streams on the left).
+2. When the reply finishes, the preview shows a **proposal** (amber banner).
+3. **Apply** commits the page for the next message; **Discard** drops it.
+
+The API key stays on the server (`/api/chat`), never in the browser.
+
+## Design decisions
+
+- **Proposal before apply** — The model can miss or break structure. Users review changes before they affect the next request.
+- **Full page JSON in a fenced block** — Easier to parse reliably than partial patches; JSON is hidden in the chat UI.
+- **Only applied content goes to the API** — `pageContent` in state is the source of truth; proposals are preview-only.
+- **Zod on client and server** — Same schema for assistant output and `/api/chat` request bodies.
+- **Unit tests on parsers** — JSON extraction and error parsing are deterministic; the LLM stream is exercised manually via the demo.
 
 ## Stack
 
-- React 19 + TypeScript + Vite
-- Tailwind CSS v4
-- Vercel AI SDK + OpenAI (`gpt-4o-mini`)
-- Zod for page content validation
+React 19 · TypeScript · Vite · Tailwind CSS v4 · Vercel AI SDK · OpenAI (`gpt-4o-mini`) · Zod · Vitest · GitHub Actions · Vercel
 
 ## Quick start
 
@@ -26,25 +37,20 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173).
 
-## How it works
-
-1. Type what to change in the chat.
-2. The assistant replies (JSON for the page is parsed on the client, not shown in the thread).
-3. The preview shows the proposal (amber banner).
-4. **Apply** saves it; **Discard** drops it.
-
-`OPENAI_API_KEY` is only used on the server (`/api/chat`), never in the browser.
+```bash
+npm run test    # unit tests
+npm run lint
+npm run build
+```
 
 ## Project layout
 
 ```
-api/          Vercel route: POST /api/chat
-server/       OpenAI streaming, prompts, request validation
-src/editor/   Chat panel, preview, apply / discard
-src/landing/  Landing page UI and content schema
-src/hooks/    Page state (committed vs proposal)
-src/lib/      Parse assistant JSON for the preview
-vite/         Local dev only — proxies /api/chat (not deployed)
+api/          POST /api/chat (Vercel)
+server/       Streaming, prompts, request validation
+src/editor/   Chat, preview, apply / discard
+src/landing/  Page UI and content schema
+src/hooks/    Committed page vs proposal state
+src/lib/      Parse assistant JSON, chat errors
+vite/         Local dev — proxies /api/chat
 ```
-
-Locally, `npm run dev` uses `vite/` to call the same `server/` code as production.
